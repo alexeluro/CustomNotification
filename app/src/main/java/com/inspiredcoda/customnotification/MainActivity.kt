@@ -19,13 +19,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var notification: Notification
-    private lateinit var manager: NotificationManagerCompat
+    private lateinit var manager: NotificationManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createNotificationChannel()
+//        createNotificationChannel()
 
         val intent = Intent(this, MainActivity::class.java)
         val pendingIntent = TaskStackBuilder.create(this).run {
@@ -33,10 +33,10 @@ class MainActivity : AppCompatActivity() {
             getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT)
         }
 
-        createNotification(pendingIntent!!)
+//        createNotification(pendingIntent!!)
 
         showNotification.setOnClickListener {
-            showNotification()
+            showNotification(pendingIntent!!)
         }
 
     }
@@ -50,8 +50,8 @@ class MainActivity : AppCompatActivity() {
                     enableLights(true)
                 }
 
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
+            manager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            manager.createNotificationChannel(channel)
         }
 
     }
@@ -65,10 +65,12 @@ class MainActivity : AppCompatActivity() {
             .setContentIntent(pendingIntent)
             .build()
 
-        manager = NotificationManagerCompat.from(this)
+//        manager = NotificationManagerCompat.from(this)
     }
 
-    private fun showNotification(){
+    private fun showNotification(pendingIntent: PendingIntent){
+        createNotificationChannel()
+        createNotification(pendingIntent)
         manager.notify(NOTIFICATION_ID, notification)
     }
 
